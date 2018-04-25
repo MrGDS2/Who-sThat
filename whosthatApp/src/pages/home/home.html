@@ -1,0 +1,13 @@
+<ion-header >
+  <ion-navbar color="light">
+    <ion-title>Who's That?!</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+<p align="center"><img src="{{image}}"  alt="img"></p>
+<ion-fab bottom center>
+    <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>-->
+    <button ion-fab  color="secondary" (click)="openCamera()" >{{task}}</button>
+</ion-fab>
+</ion-content>
