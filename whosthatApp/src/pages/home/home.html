@@ -4,10 +4,11 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-<p align="center"><img src="{{image}}"  alt="img"></p>
+<ion-content padding >
+
+    <p align="center"><img src="{{image}}" class="screen"  alt=""></p>
 <ion-fab bottom center>
-    <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>-->
-    <button ion-fab  color="secondary" (click)="openCamera()" >{{task}}</button>
+    <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
+    <button ion-fab  color="secondary" (click)="openCamera()" style="width: 100px; height: 100px" ><img src="{{task}}"> </button>
 </ion-fab>
 </ion-content>

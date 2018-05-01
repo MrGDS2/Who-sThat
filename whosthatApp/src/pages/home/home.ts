@@ -7,32 +7,31 @@ import {Camera,CameraOptions} from '@ionic-native/camera';
 })
 export class HomePage {
 
-  task: String="Snap Shot";
+  task: String="./assets/imgs/cam.png";
+ // task: String="Snap Shot";
   image:any;
 
 
     constructor(public navCtrl: NavController,public camera:Camera, public toast:ToastController) {
 
 
-
-
-
-  }
+}
  openCamera()
   {
 
     const options: CameraOptions = {
-      quality: 70,
+      quality: 90,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
-
-  this.camera.getPicture(options).then((imageData) => {
+    
+    this.camera.getPicture(options).then((imageData) => {
      // imageData is either a base64 encoded string or a file URI
      // If it's base64:
-      this.image='data:image/jpeg;base64,' + imageData;
-     this.task="ID";
+    this.image = 'data:image/jpeg;base64,' + imageData;
+    // this.task="ID";
+  this.task="./assets/imgs/ID.png"
     }, (err) => {
 
       const toast= this.toast.create({
@@ -42,7 +41,7 @@ export class HomePage {
 
     });
     toast.present();
-
+      
      // Handle error
     });
   }
@@ -61,7 +60,7 @@ export class HomePage {
     });
     }
     **/
-
-
+    
+  
 
 }
