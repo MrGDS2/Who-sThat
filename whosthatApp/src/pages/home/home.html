@@ -7,8 +7,25 @@
 <ion-content padding >
 
     <p align="center"><img src="{{image}}" class="screen"  alt=""></p>
+
+    <ion-col *ngIf="result | async as result">
+
+
+        <h3>Labels</h3>
+
+        <ion-chip color="secondary"
+                *ngFor="let label of result.labels">
+                
+                <ion-label>{{ label }}</ion-label>
+              
+        </ion-chip>
+          
+      </ion-col>
+
 <ion-fab bottom center>
     <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
-    <button ion-fab  color="secondary" (click)="openCamera()" style="width: 100px; height: 100px" ><img src="{{task}}"> </button>
+    <button ion-fab  color="secondary" (click)="openCamera()" style="width: 100px; height: 100px" >
+      <img src="{{task}}">
+    </button>
 </ion-fab>
 </ion-content>
