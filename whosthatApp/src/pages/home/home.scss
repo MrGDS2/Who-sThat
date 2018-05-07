@@ -14,14 +14,21 @@ page-home {
 .screen
 {
   border-left: 13px solid black;
+ 
 }
 
 p{
   background-color: black;
   width: 100%;
   height: 50%;
+  border-radius: 12%;
 }
 
 div{
   
+}
+
+ion-title
+{
+  text-align: center;
 }

@@ -8,24 +8,24 @@
 
     <p align="center"><img src="{{image}}" class="screen"  alt=""></p>
 
-    <ion-col *ngIf="result | async as result">
+<ion-fab bottom right>
+    <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
+    <button ion-fab  color="secondary" (click)="CaptureandDetect()"  *ngIf="image==null" style="width: 100px; height: 100px" > <ion-icon ios="ios-camera" md="md-camera"></ion-icon></button>
+</ion-fab>
 
 
-        <h3>Labels</h3>
-
-        <ion-chip color="secondary"
-                *ngFor="let label of result.labels">
-                
-                <ion-label>{{ label }}</ion-label>
-              
-        </ion-chip>
-          
-      </ion-col>
+<ion-fab bottom left>
+  <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
+  <button ion-fab  color="secondary" (click)="openGallery()"  *ngIf="image==null" style="width: 100px; height: 100px" >  <ion-icon ios="ios-photos" md="md-photos"></ion-icon></button>
+</ion-fab>
 
 <ion-fab bottom center>
-    <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
-    <button ion-fab  color="secondary" (click)="openCamera()" style="width: 100px; height: 100px" >
-      <img src="{{task}}">
-    </button>
+  <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
+  <button ion-fab  color="danger" (click)="upload()" *ngIf="image" style="width: 100px; height: 100px"  >  <ion-icon ios="ios-cloud-upload" md="md-cloud-upload"></ion-icon></button>
 </ion-fab>
+
+
+
+
+
 </ion-content>

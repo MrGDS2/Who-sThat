@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, LoadingController, Loading } from 'ionic-angular';
+import { NavController, ToastController, LoadingController } from 'ionic-angular';
+import { HttpClient } from '@angular/common/http';
+import { AlertController } from 'ionic-angular';
 import {Camera,CameraOptions} from '@ionic-native/camera';
-import {AngularFireModule} from 'angularfire2';
-import {AngularFirestoreModule, AngularFirestore} from 'angularfire2/firestore';
-import {AngularFireStorageModule, AngularFireUploadTask, AngularFireStorage} from 'angularfire2/storage';
-import { Observable } from '@firebase/util';
+import { GoogleCloudVisionServiceProvider } from '../../providers/google-cloud-vision-service/google-cloud-vision-service';
+import { AngularFireDatabase, FirebaseListObservable, AngularFireDatabaseModule } from "angularfire2/database-deprecated";
+import { FileChooser } from '@ionic-native/file-chooser';
+
+import firebase from 'firebase';
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -15,73 +18,33 @@ export class HomePage {
  // task: String="Snap Shot";
   image:any;
 
-  //upload task
-  taskimg: AngularFireUploadTask;
 
 
-  //firestore data
-  result: Observable<any>;
+ /* public ROOT_URL = 'https://vision.googleapis.com';
+  public API_KEY = 'AIzaSyDtecgFhfcxmFopdVcqlO9jj7HE_kG14Bo'; // YOUR CLOUD PLATFORM API KEY
+  public visionRequest = {
+    "requests": [{
+        "image": {
+          "content": "base64-encoded-image"
+        },
+        "features": [{
+            "type": "LABEL_DETECTION",
+            "maxResults": 1
+        }]
+    }]
+  };*/
 
-  loading : Loading;
+    constructor(public navCtrl: NavController,public camera:Camera, public toast:ToastController, public loadingCtrl: LoadingController,
+      public http: HttpClient,public alert:AlertController,
+    //  private db: AngularFireStorageModule,
+      private vision: GoogleCloudVisionServiceProvider,
+      private fileChooser: FileChooser ) {
+   //initialize db
 
 
-
-    constructor(public navCtrl: NavController,public camera:Camera, public toast:ToastController,
-                private storage: AngularFireStorage, private store: AngularFirestore,
-                private AFM: AngularFireModule, private loadCtrl: LoadingController) {
-
-                  this.loading= this.loadCtrl.create({
-
-                 content: 'Detecting image',
-                  }); 
-            
-
-}
-
-startUpload(file :string )
-{
-
-  this.loading.present();// show loading
-
-  const docId=this.store.createId();//generate ranodm Id
-
-  const path= '${docId}.jpg';
-
-  //make reference for the future location
-  const photoRef= this.store.collection('photos').doc(docId);
-
-//firestore observable
-   // Firestore observable, dismiss loader when data is available
- /*  this.result = photoRef.valueChanges()
-   .pipe(
-     filter(data => !!data),
-     tap(_ => this.loading.dismiss())
-   );
-*/
-
-//the main task
-this.image ='data:image/jpg;base64,' + file;
-this.taskimg = this.storage.ref(path).putString(this.image, 'data_url'); 
 
 }
-
-
-// Gets the pic from the native camera then starts the upload
-async captureAndUpload() {
-  const options: CameraOptions = {
-    quality: 100,
-    destinationType: this.camera.DestinationType.DATA_URL,
-    encodingType: this.camera.EncodingType.JPEG,
-    mediaType: this.camera.MediaType.PICTURE,
-    sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
-  }
-
-  const base64 = await this.camera.getPicture(options)
-//upload to firebase
-  this.startUpload(base64);
-}
-
- async openCamera()
+ openCamera()
   {
 
     const options: CameraOptions = {
@@ -91,15 +54,13 @@ async captureAndUpload() {
       mediaType: this.camera.MediaType.PICTURE
     }
     
-    const base64:any = await this.camera.getPicture(options).then((imageData) => {
+    this.camera.getPicture(options).then((imageData) => {
      // imageData is either a base64 encoded string or a file URI
      // If it's base64:
     this.image = 'data:image/jpeg;base64,' + imageData;
     // this.task="ID";
   this.task="./assets/imgs/ID.png"
-  
-
-}, (err) => {
+    }, (err) => {
 
       const toast= this.toast.create({
         message: "Error " + err,
@@ -111,9 +72,127 @@ async captureAndUpload() {
       
      // Handle error
     });
-
-   this.startUpload(base64);
   }
+
+openGallery()
+{
+  this.fileChooser.open()
+  .then(uri => console.log(uri))
+  .catch(err=>this.presentToast("error: "  + err));
+}
+
+
+
+  upload() {
+
+    try{
+    let storageRef = firebase.storage().ref();
+    // Create a timestamp as filename
+    const filename = Math.floor(Date.now() / 1000);
+
+    // Create a reference to 'images/todays-date.jpg'
+    const imageRef = storageRef.child(`images/${filename}.jpg`);
+    imageRef.putString(this.image, firebase.storage.StringFormat.DATA_URL).then((snapshot)=> {
+      // Do something here when the data is succesfully uploaded!
+      const toast= this.toast.create({
+        message: "Upload succesful",
+        duration:3000,
+  
+  
+    });
+    toast.present();
+    loader.dismiss(); // hide loading component
+     });
+     let loader = this.loadingCtrl.create({
+      content: "Uploading image..."
+    });
+
+    loader.present(); // show loading component
+    }
+    catch(e)
+    {
+      const toast= this.toast.create({
+        message: "Error " + e,
+        duration:3000,
+
+
+    });
+    toast.present();
+      
+    }
+
+
+
+  }
+
+
+
+
+
+  CaptureandDetect()
+  {
+
+    const options: CameraOptions = {
+      quality: 90,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    /**let loader = this.loadingCtrl.create({
+      content: "Detecting image..."
+    });**/
+
+   // loader.present(); // show loading component
+
+
+    this.camera.getPicture(options).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64:
+   this.vision.getLabels(imageData).subscribe((result)=>{
+//this.saveResults(imageData,result.json().responses);
+     this.showAlert(result.json().responses[0]);
+
+   },err => {
+    this.showAlert("ERROR: " + err);
+  });
+     this.image = 'data:image/jpeg;base64,' + imageData;    
+     },
+     
+    // this.task="ID";
+  //this.task="./assets/imgs/ID.png"
+     (err) => {
+
+  this.presentToast("error" + err);
+      
+     // Handle error
+    });
+
+
+  }
+  saveResults(imageData, results) {
+    //this.items.push({ imageData: imageData, results: results})
+      //.then(_ => { }).then(err => { this.showAlert(err) });
+  }
+
+
+  showAlert(message) {
+    let alert = this.alert.create({
+      title: 'Ionic Vision',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  presentToast(message) {
+    let toast = this.toast.create({
+      message,
+      duration: 3000
+    });
+    toast.present();
+  }
+
+
 
  /** async takePicture():Promise<any>
   {

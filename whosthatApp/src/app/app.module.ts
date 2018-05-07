@@ -11,23 +11,14 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { AngularFireDatabase } from 'angularfire2/database';
-import {AngularFireModule} from 'angularfire2';
-import {AngularFirestoreModule, AngularFirestore} from 'angularfire2/firestore';
-import {AngularFireStorageModule, AngularFireStorage} from 'angularfire2/storage';
-
- // Initialize Firebase
- var config = {
-  apiKey: "AIzaSyDuQb5TMo5TXM4Zd5Y4XbZnvHbQuW6Pyvk",
-  authDomain: "assistantapp-b0165.firebaseapp.com",
-  databaseURL: "https://assistantapp-b0165.firebaseio.com",
-  projectId: "assistantapp-b0165",
-  storageBucket: "assistantapp-b0165.appspot.com",
-  messagingSenderId: "163202004626"
-};
-//firebase.initializeApp(config);
-
-
+import { HttpModule } from '@angular/http';
+import{HttpClientModule} from '@angular/common/http';
+import { GoogleCloudVisionServiceProvider } from '../providers/google-cloud-vision-service/google-cloud-vision-service';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+//import {AngularFireDatabase} from 'angularfire2/database';
+import { FileChooser } from '@ionic-native/file-chooser';
 @NgModule({
   declarations: [
     MyApp,
@@ -38,11 +29,12 @@ import {AngularFireStorageModule, AngularFireStorage} from 'angularfire2/storage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(config),
-    AngularFirestoreModule,
-    AngularFireStorageModule,
-   
+    HttpModule,
+    IonicModule.forRoot(MyApp), 
+   AngularFireDatabaseModule,
+  AngularFireAuthModule,
+  HttpClientModule,
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -56,7 +48,9 @@ import {AngularFireStorageModule, AngularFireStorage} from 'angularfire2/storage
     StatusBar,
     SplashScreen,
     Camera,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    FileChooser ,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    GoogleCloudVisionServiceProvider
   ]
 })
 export class AppModule {}
