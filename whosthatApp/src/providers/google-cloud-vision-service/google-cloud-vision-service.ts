@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 //import { environment } from '../../environment';
 @Injectable()
 export class GoogleCloudVisionServiceProvider {
-  googleCloudVisionAPIKey:any='163202004626-mvbavij8onru4b4lmf30n40vmbr3omcd.apps.googleusercontent.com';
+  googleCloudVisionAPIKey:any='AIzaSyCRHgPlzmLicZ5cIIHLlFkRCpIWAwWuFH0';
 
   constructor(/*public http: Http*/ public http: Http) { }
   getLabels(base64Image) {

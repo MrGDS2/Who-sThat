@@ -10,13 +10,13 @@
 
 <ion-fab bottom right>
     <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
-    <button ion-fab  color="secondary" (click)="CaptureandDetect()"  *ngIf="image==null" style="width: 100px; height: 100px" > <ion-icon ios="ios-camera" md="md-camera"></ion-icon></button>
+    <button ion-fab  color="secondary" (click)="openCamera()"  *ngIf="image==null" style="width: 100px; height: 100px" > <ion-icon ios="ios-camera" md="md-camera"></ion-icon></button>
 </ion-fab>
 
 
 <ion-fab bottom left>
   <!--<button ion-button full (click)="openCamera()" color="secondary">Snap Shot</button>{{task}}-->
-  <button ion-fab  color="secondary" (click)="openGallery()"  *ngIf="image==null" style="width: 100px; height: 100px" >  <ion-icon ios="ios-photos" md="md-photos"></ion-icon></button>
+  <button ion-fab  color="secondary" (click)="buckets()"  *ngIf="image==null" style="width: 100px; height: 100px" >  <ion-icon ios="ios-photos" md="md-photos"></ion-icon></button>
 </ion-fab>
 
 <ion-fab bottom center>

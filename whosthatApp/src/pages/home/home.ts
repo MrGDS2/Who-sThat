@@ -8,6 +8,8 @@ import { AngularFireDatabase, FirebaseListObservable, AngularFireDatabaseModule 
 import { FileChooser } from '@ionic-native/file-chooser';
 
 import firebase from 'firebase';
+//npm install angularfire2@5.0.0-rc.4
+   // "zone.js": "0.8.26"
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -129,6 +131,8 @@ openGallery()
 
 
 
+
+
   CaptureandDetect()
   {
 
@@ -159,7 +163,10 @@ openGallery()
      },
      
     // this.task="ID";
-  //this.task="./assets/imgs/ID.png"
+  //this.task="./assets/imgs/ID.png'
+
+  //this.detect(this.image)
+    
      (err) => {
 
   this.presentToast("error" + err);
@@ -169,11 +176,59 @@ openGallery()
 
 
   }
+
+detect(file:any)
+{
+  const visionapi = require('@google-cloud/vision');
+
+
+  const client =new visionapi.ImageAnnotatorClient();
+
+  client
+  .labelDetection(file)
+  .then(results=>{
+    const labels =results[0].labelAnnotations;
+
+    console.log("labels: ");
+
+    labels.forEach(label =>console.log(label.description));
+
+  }).catch(err=>{
+       console.error("ERROR on detect " + err);
+  });
+}
+
   saveResults(imageData, results) {
     //this.items.push({ imageData: imageData, results: results})
       //.then(_ => { }).then(err => { this.showAlert(err) });
   }
 
+
+  buckets()
+  {
+    // Imports the Google Cloud client library.
+const Storage = require('@google-cloud/storage');
+
+// Instantiates a client. If you don't specify credentials when constructing
+// the client, the client library will look for credentials in the
+// environment.
+const storage = new Storage();
+
+// Makes an authenticated API request.
+storage
+  .getBuckets()
+  .then((results) => {
+    const buckets = results[0];
+
+    console.log('Buckets:');
+    buckets.forEach((bucket) => {
+      console.log(bucket.name);
+    });
+  })
+  .catch((err) => {
+    console.error('ERROR:', err);
+  });
+  }
 
   showAlert(message) {
     let alert = this.alert.create({
